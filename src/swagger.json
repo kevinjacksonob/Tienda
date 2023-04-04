@@ -1,0 +1,391 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tienda API",
+        "description": "Una API para gestionar una tienda virtual",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/users": {
+           "post": {
+                "tags": ["Users"],
+                "description": "Con este endpoint podras crear un nuevo usuario para la aplicacion de la tienda",
+                "sumary": "Crea un nuevo usuario en la tienda",
+                "requestBody": {
+                    "description": "Los campos para crear un nuevo usuario son: username, email, password, avatar",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/nuevo_usuario" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "created"
+                    },
+                    "409": {
+                        "description": "conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "example": "validation error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Database connection error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+           }
+        },
+        "/api/v1/users/{id}": {
+            "put": {
+                "tags": ["Users"],
+                "description": "Con este endpoint podras actualizar el username y el avatar de un usuario para la aplicacion de la tienda",
+                "sumary": "Actuzaliar un usuario de la tienda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id del usuario a actualizar"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Los campos para actualizar un usuario son: username, avatar",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/actualizar_usuario" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "updated"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": ["Users"],
+                "description": "Con este endpoint iniciar sesion en la aplicacion de la tienda, obteniendo un jwt",
+                "sumary": "Iniciar sesion en la tienda",
+                "requestBody": {
+                    "description": "Los campos para inciar sesion son: email, password",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/login" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "login"
+                    }
+                }
+           }
+        },
+        "/api/v1/products": {
+            "get": {
+                "tags": ["Products"],
+                "description": "Con este endpoint podras obtener todos los productos que tiene cantidad mayor a 0 de la aplicacion de la tienda",
+                "sumary": "Obtener productos existentes",
+                "responses": {
+                    "200": {
+                        "description": "succesus"
+                    },
+                    "400" : {
+                        "description": "error in the server"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Products"],
+                "description": "Con este endpoint podras crear un nuevo producto en la aplicacion de la tienda",
+                "sumary": "Crea un nuevo producto en la tienda",
+                "requestBody": {
+                    "description": "Los campos para crear un nuevo prodcuto son: name, description, price, availableQty, status, userId, productImage",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/nuevo_producto" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "created"
+                    }
+                }
+           }
+        },
+        "/api/v1/products/{id}": {
+            "put": {
+                "tags": ["Product"],
+                "description": "Con este endpoint podras actualizar la descripcion del producto de aplicacion de la tienda",
+                "sumary": "Actuzaliar un producto de la tienda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id del producto a actualizar"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Los campos para actualizar un producto son: description",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/actualizar_producto" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "updated"
+                    }
+                }
+            }
+        },
+        "/api/v1/carts/add-products": {
+            "post": {
+                "tags": ["Cart"],
+                "description": "Con este endpoint podras agregar un producto al carrito en la aplicacion de la tienda",
+                "sumary": "Agregar un producto al carrito en la tienda",
+                "requestBody": {
+                    "description": "Los campos para agregar un prodcuto son: cartId, productId, quantity, price",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/agregar_producto" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "succesus"
+                    }
+                }
+           }
+        },
+        "/api/v1/user/{id}/carts": {
+            "get": {
+                "tags": ["Cart"],
+                "description": "Con este endpoint podras obtener todos los productos que tiene un usario de la aplicacion de la tienda",
+                "sumary": "Obtener productos en el carrito",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id del usuario"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "succesus"
+                    },
+                    "400" : {
+                        "description": "error in the server"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/carts/buy-products": {
+            "post": {
+                "tags": ["Cart"],
+                "description": "Con este endpoint podras realizar una compra en la aplicacion de la tienda",
+                "sumary": "Realizar una compra en la tienda",
+                "requestBody": {
+                    "description": "Los campos para crear una compra son: userId, cartId",
+                    "required": true,
+                    "content": { 
+                        "application/json": {
+                            "schema": {
+                                "$ref":"#/components/schemas/compra" 
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "created"
+                    }
+                }
+            }
+        },
+        "/api/v1/orders/{id}": {
+            "get": {
+                "tags": ["Order"],
+                "description": "Con este endpoint podras ver las ordenes de un suario de aplicacion de la tienda",
+                "sumary": "Ver ordenes de usuario de la tienda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id del usuario"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "updated"
+                    }
+                }
+            }
+        }
+
+    },
+    "components": {
+        "schemas": {
+            "nuevo_usuario": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "example": "prueba_1"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "prueba_1@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "prueba_1"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "prueba_1 Avatar"
+                    }
+                }
+            },
+            "login": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "prueba_1@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "prueba_1"
+                    }
+                }
+            },
+            "actualizar_usuario": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "example": "prueba_1"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "prueba_1 Avatar"
+                    }
+                }
+            },
+            "nuevo_producto": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Samsung Galaxy"
+                    }, 
+                    "description": {
+                        "type": "string",
+                        "example": "Celular Samsung galaxy M31"
+                    },
+                    "price": {
+                        "type": "floar",
+                        "example": 1800000
+                    }, 
+                    "availableQty": {
+                        "type": "integer",
+                        "example": 20
+                    }, 
+                    "status": {
+                        "type": "string",
+                        "example": "activo"
+                    },
+                    "userId": {
+                        "type": "intger",
+                        "example": 1
+                    },
+                    "productImage": {
+                        "type": "string",
+                        "example": "Galzaxy Imagen"
+                    }
+                }
+            },
+            "actualizar_producto": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "example": "portatil lenovo"
+                    }
+                }
+            },
+            "agregar_producto": {
+                "type": "object",
+                "properties": {
+                    "cartId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "productId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "price": {
+                        "type": "integer",
+                        "example": 2100000 
+                    }
+                }
+            },
+            "compra": {
+                "type": "object",
+                "properties": {
+                    "cartId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                }
+            }
+        }
+    }
+}
